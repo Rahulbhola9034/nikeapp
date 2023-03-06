@@ -30,7 +30,6 @@ const ProductDetailsScreen = () => {
           showsHorizontalScrollIndicator={false}
           pagingEnabled
         />
-
         <View style={{ padding: 20 }}>
           {/* Title */}
           <Text style={styles.title}>{product.name}</Text>
@@ -41,13 +40,14 @@ const ProductDetailsScreen = () => {
           {/* Description */}
           <Text style={styles.description}>{product.description}</Text>
         </View>
-
-        {/* Add to cart button */}
-        <Pressable style={styles.button} onPress={addToCart}>
-          <Text style={styles.buttonText}>Add to cart</Text>
-        </Pressable>
-        {/* Navigation icon */}
       </ScrollView>
+
+      {/* Add to cart button */}
+      <Pressable onPress={addToCart} style={styles.button}>
+        <Text style={styles.buttonText}>Add to cart</Text>
+      </Pressable>
+
+      {/* Navigation icon */}
     </View>
   );
 };
