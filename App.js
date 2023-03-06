@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import ProductDetailsScreen from "./src/screens/ProductDetailsScreen";
-import ProductsScreen from "./src/screens/ProductsScreen";
-import ShoppingCart from "./src/screens/ShoppingCart";
+import Navigation from "./src/navigation";
 export default function App() {
   return (
     <View style={styles.container}>
-      <ShoppingCart />
+      <Navigation />
     </View>
   );
 }
