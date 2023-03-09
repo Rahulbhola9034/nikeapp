@@ -7,23 +7,51 @@ import {
   useWindowDimensions,
   ScrollView,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import products from "../data/products";
 import { Ionicons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
-const ProductDetailsScreen = () => {
-  const product = useSelector((state) => state.products.selectedProduct);
+import { cartSlice } from "../store/cartSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { useGetProductQuery } from "../store/apiSlice";
+const ProductDetailsScreen = ({ route }) => {
+  const id = route.params.id;
+  const { data, error, isLoading } = useGetProductQuery(route.params.id);
+
+  const dispatch = useDispatch();
   const { width } = useWindowDimensions();
 
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Text>{error.error}</Text>;
+  }
+
+  if (!id) {
+    return null;
+  }
+  if (!data) {
+    return null;
+  }
+  const product = data;
+  console.log(id);
+  console.log(data);
+
+  if (error) {
+    return <Text>{error.error}</Text>;
+  }
   const addToCart = () => {
-    console.warn("jhdvyu");
+    dispatch(cartSlice.actions.addCartItem({ product: product }));
   };
   return (
     <View>
       <ScrollView>
         {/* Image Carousel */}
+
         <FlatList
-          data={product.images}
+          data={data.data.images}
           renderItem={({ item }) => (
             <Image source={{ uri: item }} style={{ width, aspectRatio: 1 }} />
           )}
@@ -31,15 +59,16 @@ const ProductDetailsScreen = () => {
           showsHorizontalScrollIndicator={false}
           pagingEnabled
         />
+
         <View style={{ padding: 20 }}>
           {/* Title */}
-          <Text style={styles.title}>{product.name}</Text>
+          <Text style={styles.title}>{data.data.name}</Text>
 
           {/* Price */}
-          <Text style={styles.price}>${product.price}</Text>
+          <Text style={styles.price}>${data.data.price}</Text>
 
           {/* Description */}
-          <Text style={styles.description}>{product.description}</Text>
+          <Text style={styles.description}>{data.data.description}</Text>
         </View>
       </ScrollView>
 
