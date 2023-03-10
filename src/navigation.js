@@ -7,6 +7,8 @@ import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Pressable, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { selectNumberOfItems } from "./store/cartSlice";
+import TrackOrder from "./screens/TrackOrder";
+
 selectNumberOfItems;
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -39,6 +41,7 @@ const Navigation = () => {
                 color="gray"
               />
             ),
+            headerTitleAlign: "center",
           })}
         />
         <Stack.Screen
@@ -47,6 +50,7 @@ const Navigation = () => {
           options={{ presentation: "modal" }}
         />
         <Stack.Screen name="Cart" component={ShoppingCart} />
+        <Stack.Screen name="Track Order" component={TrackOrder} />
       </Stack.Navigator>
     </NavigationContainer>
   );
