@@ -1,57 +1,47 @@
 import {
   StyleSheet,
   View,
-  Text,
   Image,
   FlatList,
   useWindowDimensions,
+  Text,
   ScrollView,
   Pressable,
   ActivityIndicator,
 } from "react-native";
 import products from "../data/products";
-import { Ionicons } from "@expo/vector-icons";
-import { cartSlice } from "../store/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { cartSlice } from "../store/cartSlice";
 import { useGetProductQuery } from "../store/apiSlice";
+
 const ProductDetailsScreen = ({ route }) => {
   const id = route.params.id;
-  const { data, error, isLoading } = useGetProductQuery(route.params.id);
+
+  const { data, isLoading, error } = useGetProductQuery(id);
+  const product = data?.data;
 
   const dispatch = useDispatch();
+
   const { width } = useWindowDimensions();
+
+  const addToCart = () => {
+    dispatch(cartSlice.actions.addCartItem({ product }));
+  };
 
   if (isLoading) {
     return <ActivityIndicator />;
   }
 
   if (error) {
-    return <Text>{error.error}</Text>;
+    return <Text>Error fetching the product. {error.error}</Text>;
   }
 
-  if (!id) {
-    return null;
-  }
-  if (!data) {
-    return null;
-  }
-  const product = data;
-  console.log(id);
-  console.log(data);
-
-  if (error) {
-    return <Text>{error.error}</Text>;
-  }
-  const addToCart = () => {
-    dispatch(cartSlice.actions.addCartItem({ product: product }));
-  };
   return (
     <View>
       <ScrollView>
         {/* Image Carousel */}
-
         <FlatList
-          data={data.data.images}
+          data={product.images}
           renderItem={({ item }) => (
             <Image source={{ uri: item }} style={{ width, aspectRatio: 1 }} />
           )}
@@ -59,16 +49,15 @@ const ProductDetailsScreen = ({ route }) => {
           showsHorizontalScrollIndicator={false}
           pagingEnabled
         />
-
         <View style={{ padding: 20 }}>
           {/* Title */}
-          <Text style={styles.title}>{data.data.name}</Text>
+          <Text style={styles.title}>{product.name}</Text>
 
           {/* Price */}
-          <Text style={styles.price}>${data.data.price}</Text>
+          <Text style={styles.price}>${product.price}</Text>
 
           {/* Description */}
-          <Text style={styles.description}>{data.data.description}</Text>
+          <Text style={styles.description}>{product.description}</Text>
         </View>
       </ScrollView>
 
@@ -91,6 +80,7 @@ const styles = StyleSheet.create({
   price: {
     fontWeight: "500",
     fontSize: 16,
+    letterSpacing: 1.5,
   },
   description: {
     marginVertical: 10,
@@ -98,28 +88,21 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontWeight: "300",
   },
+
   button: {
-    backgroundColor: "black",
     position: "absolute",
+    backgroundColor: "black",
     bottom: 30,
     width: "90%",
     alignSelf: "center",
-    alignItems: "center",
     padding: 20,
     borderRadius: 100,
+    alignItems: "center",
   },
   buttonText: {
     color: "white",
     fontWeight: "500",
     fontSize: 16,
-  },
-  icon: {
-    position: "absolute",
-    top: 50,
-    right: 20,
-    backgroundColor: "#000000AA",
-    borderRadius: 50,
-    padding: 5,
   },
 });
 

@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  Text,
 } from "react-native";
 import products from "../data/products";
 import { useSelector, useDispatch } from "react-redux";
